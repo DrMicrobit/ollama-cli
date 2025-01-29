@@ -1,0 +1,6 @@
+[FORMAT]
+max-line-length=100
+
+[MESSAGES CONTROL]
+# duplicate of Ruff PLR0912
+disable=R0912

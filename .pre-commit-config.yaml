@@ -1,0 +1,10 @@
+repos:
+  - repo: local
+    hooks:
+      - id: validate-commit-message
+        name: Validate Commit Message
+        language: python
+        entry: python devsupport/check_commitmsg.py
+        always_run: false
+        pass_filenames: false
+        stages: [commit-msg]

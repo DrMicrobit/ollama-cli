@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SCRIPT=$(realpath "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+uv run --no-group dev --directory $SCRIPTPATH ollama-cli $*
