@@ -5,11 +5,11 @@ Simple command line tool that reads a text from stdin and pipes it to Ollama. On
 Nothing stellar, but quite useful.
 
 # Installation
+## Installation via 'uv'
+Simply type `uv tool install git+https://github.com/DrMicrobit/ollama-cli` and your are good to go!
 ## Installation via PyPi
 Not yet, TBD
 ## Installation from source
-TBD
-## Installation via 'uv'
 TBD
 
 # Usage examples
