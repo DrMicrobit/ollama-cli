@@ -11,8 +11,8 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "dm-ollamalib",
-    "dm-streamvalve",
+    "dm-ollamalib>=0.0.2",
+    "dm-streamvalve>=0.0.5",
     "httpx>=0.28.1",
     "ollama>=0.4.7",
 ]
@@ -23,10 +23,6 @@ ollama-cli = "ollama_cli:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.uv.sources]
-dm-streamvalve = { git = "https://github.com/DrMicrobit/dm-streamvalve" }
-dm-ollamalib = { git = "https://github.com/DrMicrobit/dm-ollamalib" }
 
 [dependency-groups]
 dev = [

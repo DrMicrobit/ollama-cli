@@ -89,16 +89,24 @@ wheels = [
 
 [[package]]
 name = "dm-ollamalib"
-version = "0.0.1"
-source = { git = "https://github.com/DrMicrobit/dm-ollamalib#52e771de4ec93015b4212dedeca377cded4de574" }
+version = "0.0.2"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ollama" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f0/9c/52c30c9343ac5bb4c0c5804d86450f3e125b8d28f4734c2c8bbec2ba5c2a/dm_ollamalib-0.0.2.tar.gz", hash = "sha256:fa43142dc7077cff06381bb8ef1c747fe477d9b213a8c9fe14db9abb2b29f967", size = 24921 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/09/f5/7472ba41f51bc07c7db8e92619d4247f8bf46e3f8f1b91d08757ababb7a3/dm_ollamalib-0.0.2-py3-none-any.whl", hash = "sha256:6aae17fa2c1bf2d158ab3d8d781e08ca072b9fd81dda5e64fdae734110eb9b93", size = 8314 },
 ]
 
 [[package]]
 name = "dm-streamvalve"
-version = "0.0.4"
-source = { git = "https://github.com/DrMicrobit/dm-streamvalve#ea45a452b702b52d34d5df9e774ff648e2e38586" }
+version = "0.0.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/87/f2/85ae2908f66d963e093cd5cea72b8ba32c91821b817f6ea4a12513945778/dm_streamvalve-0.0.5.tar.gz", hash = "sha256:abb0958abaa336aa16c4675f5a57bc00e9312ad6b38de08fa5025aed101bb5e7", size = 25514 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/b1/9d4837a981d6a356a23dee7a3252f12e173b1901ee86643a80baae1ca34e/dm_streamvalve-0.0.5-py3-none-any.whl", hash = "sha256:57dda26b40094a65f7d2a6212dd01833d3252df86f4366495cc5099dd8e8d304", size = 8627 },
+]
 
 [[package]]
 name = "filelock"
@@ -214,8 +222,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "dm-ollamalib", git = "https://github.com/DrMicrobit/dm-ollamalib" },
-    { name = "dm-streamvalve", git = "https://github.com/DrMicrobit/dm-streamvalve" },
+    { name = "dm-ollamalib", specifier = ">=0.0.2" },
+    { name = "dm-streamvalve", specifier = ">=0.0.5" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "ollama", specifier = ">=0.4.7" },
 ]
