@@ -124,10 +124,10 @@ You can terminate the output of Ollama prematurely by either number of lines, nu
 > [!NOTE]
 > While the normal output of Ollama appears on stdout, reasons for terminations will be shown by `ollama-cli` on stderr. That allows you to redirect the normal output to a file or pipe it to other commands without having to think about removing the termination info.
 
-## Maximum number of lines
+### Maximum number of lines
 Contrived example, terminating the output after just two lines:
 ```sh
-echo "List the name of 10 animals. Output as dashed list." | ./ollama-cli --max-lines=2
+echo "List the name of 10 animals. Output as dashed list." | ollama-cli --max-lines=2
 ```
 
 The output (both stdout and stderr) of the above could look like this:
@@ -141,19 +141,19 @@ Message: Maximum number of lines reached.
 Stopped at token/line: '-'
 ```
 
-## Maximum number of paragraphs
+### Maximum number of paragraphs
 Terminating the output after two paragraphs:
 
 ```sh
 echo "Why is the sky blue? Write an article without headlines" | ollama-cli --max-paragraphs=2
 ```
 
-## Maximum number of repeated lines
+### Maximum number of repeated lines
 Some models sometime get stuck and produce never-ending output repeating itself. I've seen this with requests like *"extract all acronyms from the text in a dashed list"*. For this, `--max-linerepeats` can alleviate the problem.
 
 Contrived example:
 ```sh
-echo "List the name of 20 animals. Mention the zebra at least 4 times across the list. Output as dashed list" | ./ollama-cli --max-linerepeats=2
+echo "List the name of 20 animals. Mention the zebra at least 4 times across the list. Output as dashed list" | ollama-cli --max-linerepeats=2
 ```
 
 The output of the above might look like this:
@@ -174,7 +174,7 @@ Stopped at token/line: '- Zebra\n'
 > On screen, but also in file in case you redirected the stdout output, you will see 3 'Zebra' although you just asked for maximum of 2 via `--max_linerepeats`. Why? The reason is that ollama-cli streams each token as it receives it, but checking for duplicate lines can be done only once an end of line is received.
 > In case you really want only the 'clean' output, redirect the monitoring output to stderr via `--tostderr`. In this case, the output on stdout will be written at the end and not contain the line which led to termination. E.g.:
 > ```sh
-> echo "List the name of 20 animals. Mention the zebra at least 4 times across the list. Output as dashed list" | ./ollama-cli --max-linerepeats=2 --tostderr >animals.txt
+> echo "List the name of 20 animals. Mention the zebra at least 4 times across the list. Output as dashed list" | ollama-cli --max-linerepeats=2 --tostderr >animals.txt
 > ```
 > The file 'animals.txt' will contain the 'clean' output.
 
