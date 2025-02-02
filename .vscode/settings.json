@@ -26,4 +26,12 @@
         "editor.formatOnSave": true,
         "editor.formatOnSaveMode": "file",
     },
+    "spellright.language": [
+        "en_GB"
+    ],
+    "spellright.documentTypes": [
+        "latex",
+        "plaintext",
+        "markdown"
+    ],
 }
