@@ -1,6 +1,6 @@
 [project]
 name = "ollama-cli"
-version = "0.0.4"
+dynamic = ["version"]
 description = """Simple command line tool that reads a text from stdin and pipes
 it to Ollama. One can set all Ollama options on commandline as well as define
 termination criteria in terms of maximum number of lines, paragraphs, or
@@ -31,13 +31,26 @@ dependencies = [
 ollama-cli = "ollama_cli:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "semver"
+
+# VScode / Even Better TOML will complain in next two sections
+# But works.
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.hatch.build.hooks.uv-dynamic-versioning]
+version-file = "src/ollama_cli/__version__.py"
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.1.0",
     "pytest-cov>=6.0.0",
+    "uv-dynamic-versioning>=0.5.0",
 ]
 
 

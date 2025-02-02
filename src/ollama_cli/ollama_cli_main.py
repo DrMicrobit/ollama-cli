@@ -17,6 +17,8 @@ import ollama
 from dm_ollamalib.optionhelper import help_long, help_overview, to_ollama_options
 from dm_streamvalve.streamvalve import StopCriterion, StreamValve
 
+from ollama_cli import __version__
+
 
 def parse_cmd_line() -> argparse.Namespace:
     """Setup of commandline parser"""
@@ -30,6 +32,13 @@ def parse_cmd_line() -> argparse.Namespace:
         ),
     )
 
+    parser.add_argument(
+        "-v",
+        "--version",
+        default=False,
+        action="store_true",
+        help=("print version of %(prog)s and exit."),
+    )
     parser.add_argument(
         "--opthelp",
         default=False,
@@ -262,7 +271,10 @@ def main():
     """
     opts = parse_cmd_line()
 
-    # Do we want some help on Ollama options?
+    # Early exists: version or help on Ollama options?
+    if opts.version:
+        print(__version__)
+        sys.exit(0)
     if opts.opthelp:
         print(help_overview())
         sys.exit(0)
