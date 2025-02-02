@@ -10,6 +10,16 @@ authors = [
     { name = "Bastien Chevreux", email = "bach@chevreux.org" }
 ]
 requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+]
 dependencies = [
     "dm-ollamalib>=0.0.2",
     "dm-streamvalve>=0.0.5",
@@ -29,3 +39,9 @@ dev = [
     "pre-commit>=4.1.0",
     "pytest-cov>=6.0.0",
 ]
+
+
+[project.urls]
+Homepage = "https://github.com/DrMicrobit/ollama-cli"
+GitHub = "https://github.com/DrMicrobit/ollama-cli"
+Issues = "https://github.com/DrMicrobit/ollama-cli/issues"
