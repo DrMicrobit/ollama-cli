@@ -1,6 +1,6 @@
 [project]
 name = "ollama-cli"
-version = "0.0.1"
+version = "0.0.3"
 description = """Simple command line tool that reads a text from stdin and pipes
 it to Ollama. One can set all Ollama options on commandline as well as define
 termination criteria in terms of maximum number of lines, paragraphs, or
