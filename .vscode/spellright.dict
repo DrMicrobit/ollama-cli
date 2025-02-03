@@ -2,3 +2,5 @@ ollama-cli
 devsupport
 check_commitsummary.py
 commitsummary
+dm-streamvalve
+dm-ollamalib

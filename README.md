@@ -2,7 +2,7 @@
 
 Simple command line tool that reads a text from stdin and pipes it to Ollama. One can set all Ollama options on command line as well as define termination criteria in terms of maximum number of lines, paragraphs, or repeated lines.
 
-Nothing stellar, but quite useful.
+Nothing stellar, but quite useful. Uses [dm-streamvalve](https://github.com/DrMicrobit/dm-streamvalve) and [dm-ollamalib](https://github.com/DrMicrobit/dm-ollamalib) to provide main functionality.
 
 # Installation
 If you haven't done so already, please install [uv](https://docs.astral.sh/uv/) as this Python package and project manager basically makes all headaches of Python package management go away in an instant.

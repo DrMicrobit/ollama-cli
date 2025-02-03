@@ -232,7 +232,7 @@ wheels = [
 
 [[package]]
 name = "ollama-cli"
-version = "0.0.4"
+version = "0.0.5"
 source = { editable = "." }
 dependencies = [
     { name = "dm-ollamalib" },
