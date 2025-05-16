@@ -17,7 +17,7 @@ import ollama
 from dm_ollamalib.optionhelper import help_long, help_overview, to_ollama_options
 from dm_streamvalve.streamvalve import StopCriterion, StreamValve
 
-from ollama_cli import __version__
+import ollama_cli
 
 
 def parse_cmd_line() -> argparse.Namespace:
@@ -177,7 +177,9 @@ def setup_ollama(
 
     try:
         client = ollama.Client(host=host)
-        ostream: Iterable[ollama.ChatResponse] = client.chat(
+        # the Ollama client() returns something funky which pylance admonishes
+        #  with a reportUnknownMemberType. Suppress that, we can't change Ollama
+        ostream: Iterable[ollama.ChatResponse] = client.chat(  # pyright: ignore
             model=model,
             messages=[
                 {"role": "system", "content": sysmsg},
@@ -195,12 +197,12 @@ def setup_ollama(
     return ostream
 
 
-def monitor_accepted_chat_response_stdout(s: str):
+def monitor_accepted_chat_response_stdout(s: str) -> None:
     """Callback for streamvalve to monitor chat response"""
     print(s, end="", flush=True)
 
 
-def monitor_accepted_chat_response_stderr(s: str):
+def monitor_accepted_chat_response_stderr(s: str) -> None:
     """Callback for streamvalve to monitor chat response"""
     print(s, file=sys.stderr, end="", flush=True)
 
@@ -233,7 +235,8 @@ def run_ostream_via_streamvalve(
 
     def extract_chat_response(cr: ollama.ChatResponse) -> str:
         """Callback for streamvalve to extract chat response as str"""
-        return cr["message"]["content"]
+        # mypy has no way to know that this is a str ... therefore ignore
+        return cr["message"]["content"]  # type: ignore[no-any-return]
 
     sv = StreamValve(
         ostream,
@@ -264,7 +267,7 @@ def run_ostream_via_streamvalve(
     return ret
 
 
-def main():
+def main() -> None:
     """Entry point to ollama-cli.
 
     Parse cmd line, get SYSTEM and USR msg, setup the Ollama model, and stream answer back.
@@ -273,7 +276,7 @@ def main():
 
     # Early exists: version or help on Ollama options?
     if opts.version:
-        print(__version__)
+        print(ollama_cli.__version__)
         sys.exit(0)
     if opts.opthelp:
         print(help_overview())

@@ -5,6 +5,7 @@
         "charliermarsh.ruff",
         "tamasfe.even-better-toml",
         "aaron-bond.better-comments",
+        "github.vscode-github-actions",
         "bierner.markdown-mermaid",
         "ban.spellright"
     ]
