@@ -5,6 +5,7 @@ Ollama options on commandline as well as define termination criteria in terms of
 maximum number of lines, paragraphs, or repeated lines."""
 
 import argparse
+import importlib.metadata
 import sys
 
 # Jan 2025. Weird pylint E0401 bug, see https://github.com/pylint-dev/pylint/issues/10112
@@ -17,7 +18,7 @@ import ollama
 from dm_ollamalib.optionhelper import help_long, help_overview, to_ollama_options
 from dm_streamvalve.streamvalve import StopCriterion, StreamValve
 
-import ollama_cli
+__version__ = importlib.metadata.version("ollama-cli")
 
 
 def parse_cmd_line() -> argparse.Namespace:
@@ -122,6 +123,17 @@ def parse_cmd_line() -> argparse.Namespace:
         ),
     )
     group.add_argument(
+        "--max-linetokens",
+        default=3000,
+        metavar="INT",
+        type=int,
+        help=(
+            "To prevent endless output in a single line. If >0, stop after this number of tokens"
+            " if no newline chracter was encountered."
+            " Default: %(default)i"
+        ),
+    )
+    group.add_argument(
         "--max-paragraphs",
         default=0,
         metavar="INT",
@@ -207,45 +219,23 @@ def monitor_accepted_chat_response_stderr(s: str) -> None:
     print(s, file=sys.stderr, end="", flush=True)
 
 
+def extract_chat_response(cr: ollama.ChatResponse) -> str:
+    """Callback for streamvalve to extract chat response as str"""
+    # mypy has no way to know that this is a str ... therefore ignore
+    return cr["message"]["content"]  # type: ignore[no-any-return]
+
+
 def run_ostream_via_streamvalve(
-    ostream: Iterable[ollama.ChatResponse],
-    max_linerepeats: int = 0,
-    max_lines: int = 0,
-    max_paragraphs: int = 0,
+    sv: StreamValve,
     monitor_callback: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Setup a StreamValve and run the Ollama stream through it. Try to handle known errors
     gracefully with a message and a sys.exit(1)
 
     Return:
-    - the return value from streamvalve
-
-    Parameters:
-    - ostream: an Iterable[ChatResponse]. Basically the return value of ollama.chat()
-    - max_linerepeats: if >0, stop after this number of non-empty lines that are repeated.
-      Lines do not need to be following each other to be spotted as repeats.
-    - max_lines: if > 0, max number of complete lines read from Ollama
-    - max_paragraphs: if > 0, max number of complete lines read from Ollama
-    - monitor_callback: a callback to pass to streamvalve for monitoring the stream
-
-    Returns
-    - Tuple. First elem is all text collected from ollama,
-      second is stop criterion as text if not None
+    - the return value from StreamValve
     """
 
-    def extract_chat_response(cr: ollama.ChatResponse) -> str:
-        """Callback for streamvalve to extract chat response as str"""
-        # mypy has no way to know that this is a str ... therefore ignore
-        return cr["message"]["content"]  # type: ignore[no-any-return]
-
-    sv = StreamValve(
-        ostream,
-        callback_extract=extract_chat_response,
-        callback_token=monitor_callback,
-        max_linerepeats=max_linerepeats,
-        max_lines=max_lines,
-        max_paragraphs=max_paragraphs,
-    )
     ret = sv.process()
 
     # streams sometimes end without a newline at the end. In this case, and if the stream
@@ -276,7 +266,7 @@ def main() -> None:
 
     # Early exists: version or help on Ollama options?
     if opts.version:
-        print(ollama_cli.__version__)
+        print(__version__)
         sys.exit(0)
     if opts.opthelp:
         print(help_overview())
@@ -317,14 +307,17 @@ def main() -> None:
         host=opts.host,
     )
 
+    sv = StreamValve(
+        ostream,
+        callback_extract=extract_chat_response,
+        callback_token=monitor,
+        max_linerepeats=opts.max_linerepeats,
+        max_lines=opts.max_lines,
+        max_linetokens=opts.max_linetokens,
+        max_paragraphs=opts.max_paragraphs,
+    )
     try:
-        result = run_ostream_via_streamvalve(
-            ostream,
-            max_linerepeats=opts.max_linerepeats,
-            max_lines=opts.max_lines,
-            max_paragraphs=opts.max_paragraphs,
-            monitor_callback=monitor,
-        )
+        result = run_ostream_via_streamvalve(sv, monitor)
     except ollama.ResponseError as e:
         print(
             f"Ollama response error: {e}\n\nNo further information available, sorry.",

@@ -44,6 +44,9 @@ Early termination options:
                         each other to be spotted as repeats. Default: 3
   --max-lines INT       To prevent endless output. If >0, stop after this
                         number of lines. Default: 200
+  --max-linetokens INT  To prevent endless output in a single line. If >0, stop
+                        after this number of tokens if no newline was encountered.
+                        Default: 200
   --max-paragraphs INT  To prevent endless diverse output. If >0, stop after
                         this number of paragraphs. Default: 0
 
@@ -119,7 +122,8 @@ Sets the size of the context window used to generate the next token. (Default: 2
 ## Early termination examples
 Sometimes models produce way more output than you wanted. Or get stuck in endless loops.
 
-You can terminate the output of Ollama prematurely by either number of lines, number of paragraphs or number of exact line repeats.
+You can terminate the output of Ollama prematurely by either number of lines, number of tokens in a single line,
+number of paragraphs or number of exact line repeats.
 
 > [!NOTE]
 > While the normal output of Ollama appears on stdout, reasons for terminations will be shown by `ollama-cli` on stderr. That allows you to redirect the normal output to a file or pipe it to other commands without having to think about removing the termination info.
@@ -141,6 +145,18 @@ Message: Maximum number of lines reached.
 Stopped at token/line: '-'
 ```
 
+### Maximum number of tokens in a line
+Qwen3:8b was the first model I encountered that gave me endless output without newlines, which made 
+this termination criterion necessary. The default value of 3000 whould be enough for ~1000 - 3000
+words (depending on model), which is way longer than any single line should be. However, as Qwen3
+likes to write whole paragraphs in a single line (especially in the \<thinking\> output), this feels
+like a reasonable bound.
+
+Contrived example, terminating the output when the length of a line exceeds 10 tokens:
+```sh
+echo "Enumerate 5 animals in a list, then describe what is a house." | ollama-cli --max-linetokens=10
+```
+
 ### Maximum number of paragraphs
 Terminating the output after two paragraphs:
 
@@ -149,7 +165,7 @@ echo "Why is the sky blue? Write an article without headlines" | ollama-cli --ma
 ```
 
 ### Maximum number of repeated lines
-Some models sometime get stuck and produce never-ending output repeating itself. I've seen this with requests like *"extract all acronyms from the text in a dashed list"*. For this, `--max-linerepeats` can alleviate the problem.
+Some models sometimes get stuck and produce never-ending output repeating itself. I've seen this with requests like *"extract all acronyms from the text in a dashed list"*. For this, `--max-linerepeats` can alleviate the problem.
 
 Contrived example:
 ```sh
@@ -184,6 +200,8 @@ The GitHub repository comes with all files I currently use for Python developmen
 - configuration of the Python environment via `uv`: pyproject.toml and uv.lock
 - configuration for linter and code formatter `ruff`: ruff.toml
 - configuration for `pylint`: .pylintrc
+- configuration for `mypy`: .mypy.ini
+- configuration for `pytest` (though no tests are currently defined as this is a straightforward CLI tool): pytest.ini
 - git ignore files: .gitignore
 - configuration for `pre-commit`: .pre-commit-config.yaml. The script used to check `git commit` summary message is in devsupport/check_commitsummary.py
 - configuration for VSCode editor: .vscode directory
